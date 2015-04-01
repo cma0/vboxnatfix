@@ -1,0 +1,28 @@
+# due to a longstanding bug in virtualbox, 
+# OS X can't use bridged networking over wifi:
+# https://www.virtualbox.org/ticket/10019
+
+# pre-requisite:
+# ssh-copy-id public key from VM guest to VM host.
+
+# TODO
+# See also:
+# http://stackoverflow.com/questions/1998297/ssh-check-if-a-tunnel-is-alive
+# offers a crude way to test remote tunnel health, but needs to be more robust
+#
+# write a pidfile instead of the hack
+
+[Unit]
+Description=VirtualBox NAT SSH Service
+After=sshd.service
+Requires=sshd.service
+
+[Service]
+EnvironmentFile=/etc/sysconfig/vboxnatfix
+Type=forking
+Restart=always
+ExecStart=/bin/ssh -oStrictHostKeyChecking=no -Y ${REMOTE_USER}@${DG} -N -f -R ${REMOTE_PORT}:${MYIP}:22
+
+[Install]
+WantedBy=multi-user.target
+

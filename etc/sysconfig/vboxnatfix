@@ -1,0 +1,5 @@
+DG=$(/sbin/ip route | awk '/default/ { print $3 }')
+MYIP=$(/sbin/ip route |awk '/src/ {print $NF}')
+REMOTE_PORT=10000
+REMOTE_USER=YOURUSERNAME
+
